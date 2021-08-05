@@ -1,26 +1,24 @@
 class Solution {
 public:
-    int flag = 0;
+    vector<vector<bool>> vis;
     bool dfs(vector<vector<char>>& board,int i,int j, string word,int k)
     {
-        if(flag)
+        if(k==word.size())
         {
             return true;
         }
-        int t= word.size();
-        if(k==t)
+        
+        if(i<0 || i>=board.size() || j<0 || j>=board[0].size() || board[i][j]!=word[k] || vis[i][j])
         {
-            flag =1;
+            return false;
+        }
+        vis[i][j]=true;
+        
+        if(dfs(board,i,j+1,word,k+1) || dfs(board,i+1,j,word,k+1) || dfs(board,i-1,j,word,k+1) || dfs(board,i,j-1,word,k+1) )
+        {
             return true;
         }
-        if(board[i][j]==word[k])
-        {
-            board[i][j]='#';
-            if(flag==0 && j+1<board[0].size())  dfs(board,i,j+1,word,k+1);
-            if(flag==0 && i+1<board.size())  dfs(board,i+1,j,word,k+1);
-            if(flag==0 && i-1>=0)  dfs(board,i-1,j,word,k+1);
-            if(flag==0 && j-1>=0)  dfs(board,i,j-1,word,k+1);
-        }
+        vis[i][j]=false;
         return false;
     }
     bool exist(vector<vector<char>>& board, string word) {
@@ -28,7 +26,8 @@ public:
         int m = board[0].size();
         vector<vector<char>> b;
         b = board;
-        vector<vector<bool>> vis(n,vector<bool>(m,false));
+        vector<vector<bool>> vis1(n,vector<bool>(m,false));
+        vis = vis1;
         for(int i=0;i<n;i++)
         {
             for(int j=0;j<m;j++)
@@ -38,13 +37,9 @@ public:
                     return true;
                 }
                 board=b;
-                if(board[i][j]==word[0])
+                if(board[i][j]==word[0] && dfs(board,i,j,word,0))
                 {
-                    dfs(board,i,j,word,0);
-                    if(flag)
-                    {
                     return true;
-                    }
                 }
             }
         }
