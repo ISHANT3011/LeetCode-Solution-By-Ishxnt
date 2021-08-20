@@ -69,3 +69,18 @@ public:
         return st;
     }
 };
+
+
+
+int n = arr.size();
+for(int i =0;i<n;i++)
+{
+    int temp = arr[i];
+    int x =0;
+    while(temp>0)
+    {
+        x+=temp%10;
+        temp/=10;
+    }
+    answer.push_back(x);
+}
